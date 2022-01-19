@@ -7,8 +7,8 @@ android {
         config {
             keyAlias 'MyAndroidKey'
             storeFile file('/Users/eshwaribhide/android.jks')
-            keyPassword 'k”]?m+\'<3TJAQz\\)'
-            storePassword 'FYj;vq7”d7gb=r{;'
+            keyPassword 'km3TJAQz'
+            storePassword 'km3TJAQz'
         }
     }
     compileSdkVersion 30
