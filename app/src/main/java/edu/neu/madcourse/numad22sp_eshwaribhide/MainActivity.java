@@ -5,8 +5,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.TextView;
-import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
     public static final String EXTRA_MESSAGE = "edu.neu.madcourse.numad22sp_eshwaribhide.MESSAGE";
@@ -30,13 +28,4 @@ public class MainActivity extends AppCompatActivity {
         intent.putExtra(EXTRA_MESSAGE, msg);
         startActivity(intent);
     }
-
-//    public void showToast(String toastMsg) {
-//        Toast toast = Toast.makeText(this, toastMsg, Toast.LENGTH_LONG);
-//        toast.show();
-//    }
-//
-//    public void displayToastMsg(View v) {
-//        showToast("Eshwari Bhide, bhide.e@northeastern.edu");
-//    }
 }
