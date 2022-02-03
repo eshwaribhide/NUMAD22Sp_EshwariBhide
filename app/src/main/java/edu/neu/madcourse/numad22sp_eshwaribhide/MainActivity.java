@@ -15,7 +15,15 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
     }
 
-    /** Called when the user taps the Send button */
+    /** Called when the user taps the Clicky Clicky button */
+    public void clickyClickyOnClick(View view) {
+        Intent intent = new Intent(this, ClickyClickyActivity.class);
+        String msg = "Clicky Clicky";
+        intent.putExtra(EXTRA_MESSAGE, msg);
+        startActivity(intent);
+    }
+
+    /** Called when the user taps the About Me button */
     public void sendMessage(View view) {
         Intent intent = new Intent(this, DisplayMessageActivity.class);
         String msg = "Eshwari Bhide, bhide.e@northeastern.edu";
