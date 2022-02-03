@@ -9,4 +9,10 @@
     <string name="b">B</string>
     <string name="f">F</string>
     <string name="pressed">Pressed: -</string>
+    <string name="pressedA">Pressed: A</string>
+    <string name="pressedB">Pressed: B</string>
+    <string name="pressedC">Pressed: C</string>
+    <string name="pressedD">Pressed: D</string>
+    <string name="pressedE">Pressed: E</string>
+    <string name="pressedF">Pressed: F</string>
 </resources>

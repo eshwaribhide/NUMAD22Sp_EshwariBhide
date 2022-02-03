@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
@@ -18,10 +19,9 @@ public class MainActivity extends AppCompatActivity {
     /** Called when the user taps the Clicky Clicky button */
     public void clickyClickyOnClick(View view) {
         Intent intent = new Intent(this, ClickyClickyActivity.class);
-//        String msg = "Clicky Clicky";
-//        intent.putExtra(EXTRA_MESSAGE, msg);
         startActivity(intent);
     }
+
 
     /** Called when the user taps the About Me button */
     public void sendMessage(View view) {
