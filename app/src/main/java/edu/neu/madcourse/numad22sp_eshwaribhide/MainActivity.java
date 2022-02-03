@@ -18,8 +18,8 @@ public class MainActivity extends AppCompatActivity {
     /** Called when the user taps the Clicky Clicky button */
     public void clickyClickyOnClick(View view) {
         Intent intent = new Intent(this, ClickyClickyActivity.class);
-        String msg = "Clicky Clicky";
-        intent.putExtra(EXTRA_MESSAGE, msg);
+//        String msg = "Clicky Clicky";
+//        intent.putExtra(EXTRA_MESSAGE, msg);
         startActivity(intent);
     }
 
