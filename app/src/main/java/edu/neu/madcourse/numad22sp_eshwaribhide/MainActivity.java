@@ -14,14 +14,19 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
     }
 
-    /** Called when the user taps the Clicky Clicky button */
+    /** Method is called when the user taps the Link Collector button */
+    public void linkCollectorOnClick(View view) {
+        Intent intent = new Intent(this, LinkCollectorActivity.class);
+        startActivity(intent);
+    }
+
+    /** Method is called when the user taps the Clicky Clicky button */
     public void clickyClickyOnClick(View view) {
         Intent intent = new Intent(this, ClickyClickyActivity.class);
         startActivity(intent);
     }
 
-
-    /** Called when the user taps the About Me button */
+    /** Method is called when the user taps the About Me button */
     public void aboutMeOnClick(View view) {
         Intent intent = new Intent(this, AboutMeActivity.class);
         String name = "Eshwari Bhide, bhide.e@northeastern.edu";
