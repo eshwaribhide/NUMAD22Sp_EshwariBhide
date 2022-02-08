@@ -16,7 +16,7 @@
                 android:value=".MainActivity" />
         </activity>
         <activity
-            android:name=".DisplayMessageActivity"
+            android:name=".AboutMeActivity"
             android:parentActivityName=".MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
