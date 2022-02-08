@@ -7,6 +7,7 @@
     tools:context=".LinkCollectorActivity">
 
     <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
         android:layout_width="398dp"
         android:layout_height="767dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -27,4 +28,5 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.877"
         app:srcCompat="@android:drawable/ic_input_add" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

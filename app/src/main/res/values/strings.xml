@@ -15,4 +15,6 @@
     <string name="pressedD">Pressed: D</string>
     <string name="pressedE">Pressed: E</string>
     <string name="pressedF">Pressed: F</string>
+    <string name="list_item_name" />
+    <string name="list_item_value" />
 </resources>
