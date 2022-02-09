@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import java.net.URL;
 import java.util.ArrayList;
 
 public class LinkCollectorActivity extends AppCompatActivity {
@@ -130,8 +131,25 @@ public class LinkCollectorActivity extends AppCompatActivity {
     public void finishedButtonOnClick(View view) {
         EditText editLinkName = (EditText) findViewById(R.id.editTextLinkName);
         EditText editLinkValue = (EditText) findViewById(R.id.editTextLinkValue);
+
+        String urlValue = editLinkValue.getText().toString();
+
+        try {
+            new URL(urlValue).toURI();
+            addItem(editLinkName.getText().toString(), urlValue);
+        }
+        catch (Exception e) {
+            Toast toast = Toast.makeText(this, "hi", Toast.LENGTH_LONG);
+            toast.show();
+        }
+
         editLinkName.setEnabled(false);
         editLinkValue.setEnabled(false);
-        addItem(editLinkName.getText().toString(), editLinkValue.getText().toString());
+
+        editLinkName.setHint("Enter Link Name");
+        editLinkValue.setHint("Enter Link Value");
+
     }
+
+
 }
