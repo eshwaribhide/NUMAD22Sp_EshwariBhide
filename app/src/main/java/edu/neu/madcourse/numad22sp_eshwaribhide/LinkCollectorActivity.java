@@ -121,7 +121,6 @@ public class LinkCollectorActivity extends AppCompatActivity {
 
                 int size = savedInstanceState.getInt("LengthLinksCollected");
 
-                // Retrieve keys we stored in the instance
                 for (int i = 0; i < size; i++) {
                     int keyInt = i + 1;
                     String key = Integer.toString(keyInt);
@@ -197,7 +196,7 @@ public class LinkCollectorActivity extends AppCompatActivity {
 
                 if (linkNames.contains(editLinkName.getText().toString())) {
                     success = false;
-                    snackbarMessage = "Link Name Already Exists";
+                    snackbarMessage = "Cannot Add Link: Link Name Already Exists";
                 }
                 else {
                     String strippedHTTPURL = stripHTTPURL(httpUrlValue);
@@ -206,7 +205,7 @@ public class LinkCollectorActivity extends AppCompatActivity {
                         String strippedLinkVal= stripHTTPURL(linkVal);
                         if (strippedLinkVal.contains(strippedHTTPURL) || strippedHTTPURL.contains(strippedLinkVal)) {
                             success = false;
-                            snackbarMessage = "Link Value Already Exists";
+                            snackbarMessage = "Cannot Add Link: Link Value Already Exists";
                             break;
                         }
                     }
@@ -214,6 +213,7 @@ public class LinkCollectorActivity extends AppCompatActivity {
             }
             else {
                 success = false;
+                snackbarMessage = "Cannot Add Link: Input is not a validly formatted URL";
             }
 
             if (success) {
