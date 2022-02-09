@@ -15,6 +15,9 @@ import android.webkit.URLUtil;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.android.material.snackbar.BaseTransientBottomBar;
+import com.google.android.material.snackbar.Snackbar;
+
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -179,29 +182,21 @@ public class LinkCollectorActivity extends AppCompatActivity {
 
         String httpUrlValue = urlValue;
 
-//        if (!(httpUrlValue.startsWith("http://")) || (httpUrlValue.startsWith("https://"))) {
-//            if (httpUrlValue.startsWith("www.")) {
-//                httpUrlValue = "http://" + urlValue;
-//            }
-//            else {
-//                httpUrlValue = "http://www." + urlValue;
-//            }
-//
-//        }
-
-
-
-        if (URLUtil.isValidUrl(urlValue)) {
-            Toast toast = Toast.makeText(LinkCollectorActivity.this, "hi", Toast.LENGTH_SHORT);
-            toast.show();
-        }
-
-        else {
-            Toast toast2 = Toast.makeText(LinkCollectorActivity.this, "hello", Toast.LENGTH_SHORT);
-            toast2.show();
+        if (!(httpUrlValue.startsWith("http://")) || (httpUrlValue.startsWith("https://"))) {
+            if (httpUrlValue.startsWith("www.")) {
+                httpUrlValue = "http://" + urlValue;
+            }
+            else {
+                httpUrlValue = "http://www." + urlValue;
+            }
 
         }
 
+        addItem(editLinkName.getText().toString(),  urlValue,  httpUrlValue);
+
+        Snackbar sb = Snackbar.make(view, "Link Created Successfully", BaseTransientBottomBar.LENGTH_LONG);
+
+        sb.show();
 
         editLinkName.getText().clear();
         editLinkValue.getText().clear();
@@ -212,9 +207,8 @@ public class LinkCollectorActivity extends AppCompatActivity {
         editLinkName.setEnabled(false);
         editLinkValue.setEnabled(false);
 
-//        Intent i = new Intent(Intent.ACTION_VIEW);
-//        i.setData(Uri.parse("http://google.com"));
-//        LinkCollectorActivity.this.startActivity(i);
+
+
 
     }
 
