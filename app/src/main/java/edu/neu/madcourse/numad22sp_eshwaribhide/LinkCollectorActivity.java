@@ -111,7 +111,6 @@ public class LinkCollectorActivity extends AppCompatActivity {
 
     private void addItem() {
         collectedLinks.add(0, new ListItem("No Logo item", "Item id: " ));
-        Toast.makeText(LinkCollectorActivity.this, "Add an item", Toast.LENGTH_SHORT).show();
         recyclerViewAdapter.notifyItemInserted(0);
     }
 
