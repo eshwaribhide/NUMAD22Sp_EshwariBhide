@@ -11,10 +11,14 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
+import android.webkit.URLUtil;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import java.io.IOException;
+import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 
 public class LinkCollectorActivity extends AppCompatActivity {
@@ -28,16 +32,18 @@ public class LinkCollectorActivity extends AppCompatActivity {
 
         private final String linkName;
         private final String linkValue;
+        private final String httpUrlValue;
 
-        public ListItem(Context context, String linkName, String linkValue) {
+        public ListItem(Context context, String linkName, String linkValue, String httpUrlValue) {
             this.context = context;
             this.linkName = linkName;
             this.linkValue = linkValue;
+            this.httpUrlValue = httpUrlValue;
         }
 
         public void listItemOnClick(int position) {
             Intent i = new Intent(Intent.ACTION_VIEW);
-            i.setData(Uri.parse(linkValue));
+            i.setData(Uri.parse(httpUrlValue));
             context.startActivity(i);
         }
 
@@ -48,6 +54,10 @@ public class LinkCollectorActivity extends AppCompatActivity {
 
         public String getlinkValue() {
             return linkValue;
+        }
+
+        public String getLinkHttpValue() {
+            return httpUrlValue;
         }
     }
 
@@ -98,6 +108,7 @@ public class LinkCollectorActivity extends AppCompatActivity {
             String key = Integer.toString(keyInt);
             outState.putString("LinkNameKey" + key, collectedLinks.get(i).getlinkName());
             outState.putString("LinkValueKey" + key, collectedLinks.get(i).getlinkValue());
+            outState.putString("LinkHTTPValueKey" + key, collectedLinks.get(i).getLinkHttpValue());
         }
         super.onSaveInstanceState(outState);
 
@@ -115,9 +126,10 @@ public class LinkCollectorActivity extends AppCompatActivity {
                     int keyInt = i + 1;
                     String key = Integer.toString(keyInt);
                     String linkName = savedInstanceState.getString("LinkNameKey" + key);
-                    String linkValue = savedInstanceState.getString("LinkNameKey" + key);
+                    String linkValue = savedInstanceState.getString("LinkValueKey" + key);
+                    String linkHTTPValue = savedInstanceState.getString("LinkHTTPValueKey" + key);
 
-                    ListItem listItem = new ListItem(this, linkName, linkValue);
+                    ListItem listItem = new ListItem(this, linkName, linkValue, linkHTTPValue);
 
                     collectedLinks.add(listItem);
                 }
@@ -147,8 +159,8 @@ public class LinkCollectorActivity extends AppCompatActivity {
         generateRecyclerView();
     }
 
-    private void addItem(String linkName, String linkValue) {
-        collectedLinks.add(0, new ListItem(this, linkName, linkValue));
+    private void addItem(String linkName, String linkValue, String httpUrlValue) {
+        collectedLinks.add(0, new ListItem(this, linkName, linkValue, httpUrlValue));
         recyclerViewAdapter.notifyItemInserted(0);
     }
 
@@ -159,19 +171,37 @@ public class LinkCollectorActivity extends AppCompatActivity {
         editLinkValue.setEnabled(true);
     }
 
-    public void finishedButtonOnClick(View view) {
+    public void finishedButtonOnClick(View view) throws IOException {
         EditText editLinkName = (EditText) findViewById(R.id.editTextLinkName);
         EditText editLinkValue = (EditText) findViewById(R.id.editTextLinkValue);
 
         String urlValue = editLinkValue.getText().toString();
 
-        try {
-            new URL(urlValue).toURI();
-            addItem(editLinkName.getText().toString(), urlValue);
+        String httpUrlValue = urlValue;
+
+//        if (!(httpUrlValue.startsWith("http://")) || (httpUrlValue.startsWith("https://"))) {
+//            if (httpUrlValue.startsWith("www.")) {
+//                httpUrlValue = "http://" + urlValue;
+//            }
+//            else {
+//                httpUrlValue = "http://www." + urlValue;
+//            }
+//
+//        }
+
+
+
+        if (URLUtil.isValidUrl(urlValue)) {
+            Toast toast = Toast.makeText(LinkCollectorActivity.this, "hi", Toast.LENGTH_SHORT);
+            toast.show();
         }
-        catch (Exception e) {
+
+        else {
+            Toast toast2 = Toast.makeText(LinkCollectorActivity.this, "hello", Toast.LENGTH_SHORT);
+            toast2.show();
 
         }
+
 
         editLinkName.getText().clear();
         editLinkValue.getText().clear();
