@@ -181,42 +181,48 @@ public class LinkCollectorActivity extends AppCompatActivity {
 
         alertDialogBuilder.setPositiveButton("OK", (dialog, whichButton) -> {
             boolean success = true;
-            String snackbarMessage = "Link Added Successfully";
+            String snackbarMessage = "Cannot Add Link: ";
             String urlValue = editLinkValue.getText().toString();
             String httpUrlValue = urlValue;
 
             // Successfully added only if user inputted a valid URL, and does not have the same
             // name or value for the link (X.com is equivalent to http://X.com, http://www.X.com,
-            // https://X.com, https://www.X.com, and www.X.com)
+            // https://X.com, https://www.X.com, and www.X.com). Error messages are concatenated
+            // for each individual error.
+
+            if (linkNames.contains(editLinkName.getText().toString())) {
+                success = false;
+                snackbarMessage += "Link Name Already Exists | ";
+            }
+
             if (Patterns.WEB_URL.matcher(urlValue).matches()) {
 
                 if (!(httpUrlValue.startsWith("http://")) && !(httpUrlValue.startsWith("https://"))) {
                     httpUrlValue = generateHTTPURLValue(httpUrlValue, urlValue);
                 }
 
-                if (linkNames.contains(editLinkName.getText().toString())) {
-                    success = false;
-                    snackbarMessage = "Cannot Add Link: Link Name Already Exists";
-                }
-                else {
-                    String strippedHTTPURL = stripHTTPURL(httpUrlValue);
+                String strippedHTTPURL = stripHTTPURL(httpUrlValue);
 
-                    for (String linkVal : linkValues) {
-                        String strippedLinkVal= stripHTTPURL(linkVal);
-                        if (strippedLinkVal.contains(strippedHTTPURL) || strippedHTTPURL.contains(strippedLinkVal)) {
-                            success = false;
-                            snackbarMessage = "Cannot Add Link: Link Value Already Exists";
-                            break;
-                        }
+                for (String linkVal : linkValues) {
+                    String strippedLinkVal= stripHTTPURL(linkVal);
+                    if (strippedLinkVal.contains(strippedHTTPURL) || strippedHTTPURL.contains(strippedLinkVal)) {
+                        success = false;
+                        snackbarMessage += "Link Value Already Exists";
+                        break;
                     }
                 }
             }
             else {
                 success = false;
-                snackbarMessage = "Cannot Add Link: Input is not a validly formatted URL";
+                snackbarMessage += "Input is not a validly formatted URL";
+            }
+
+            if (snackbarMessage.endsWith("| ")) {
+                snackbarMessage = snackbarMessage.substring(0, snackbarMessage.length() - 2);
             }
 
             if (success) {
+                snackbarMessage = "Link Added Successfully";
                 linkNames.add(editLinkName.getText().toString());
                 linkValues.add(httpUrlValue);
                 addItem(editLinkName.getText().toString(), urlValue, httpUrlValue);
