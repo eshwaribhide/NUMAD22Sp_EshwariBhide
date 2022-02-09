@@ -19,4 +19,6 @@
     <string name="list_item_value" />
     <string name="linkName" />
     <string name="linkValue" />
+    <string name="enter_link_name">Enter Link Name</string>
+    <string name="enter_link_value">Enter Link Value</string>
 </resources>
