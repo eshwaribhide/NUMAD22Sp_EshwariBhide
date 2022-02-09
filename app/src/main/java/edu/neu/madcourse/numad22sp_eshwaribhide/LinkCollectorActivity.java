@@ -1,6 +1,7 @@
 package edu.neu.madcourse.numad22sp_eshwaribhide;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -10,22 +11,23 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Patterns;
 import android.view.View;
-import android.webkit.URLUtil;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
 
-import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URLConnection;
 import java.util.ArrayList;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class LinkCollectorActivity extends AppCompatActivity {
     private ArrayList<ListItem> collectedLinks = new ArrayList<>();
+    private ArrayList<String> linkNames = new ArrayList<>();
+    private ArrayList<String> linkValues = new ArrayList<>();
 
     private RecyclerView recyclerView;
     private RecyclerViewAdapter recyclerViewAdapter;
@@ -90,11 +92,6 @@ public class LinkCollectorActivity extends AppCompatActivity {
             }
         });
         itemTouchHelper.attachToRecyclerView(recyclerView);
-
-        EditText editLinkName = (EditText) findViewById(R.id.editTextLinkName);
-        EditText editLinkValue = (EditText) findViewById(R.id.editTextLinkValue);
-        editLinkName.setEnabled(false);
-        editLinkValue.setEnabled(false);
     }
 
     @Override
@@ -168,51 +165,90 @@ public class LinkCollectorActivity extends AppCompatActivity {
     }
 
     public void floatingActionButtonOnClick(View view) {
-        EditText editLinkName = (EditText) findViewById(R.id.editTextLinkName);
-        EditText editLinkValue = (EditText) findViewById(R.id.editTextLinkValue);
-        editLinkName.setEnabled(true);
-        editLinkValue.setEnabled(true);
-    }
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+        alertDialogBuilder.setTitle("Enter Link Name and Link Value");
+        LinearLayout layout = new LinearLayout(this);
+        layout.setOrientation(LinearLayout.VERTICAL);
 
-    public void finishedButtonOnClick(View view) throws IOException {
-        EditText editLinkName = (EditText) findViewById(R.id.editTextLinkName);
-        EditText editLinkValue = (EditText) findViewById(R.id.editTextLinkValue);
+        final EditText editLinkName = new EditText(this);
+        editLinkName.setHint("Enter Link Name");
+        layout.addView(editLinkName);
 
-        String urlValue = editLinkValue.getText().toString();
+        final EditText editLinkValue = new EditText(this);
+        editLinkValue.setHint("Enter Link Value");
+        layout.addView(editLinkValue);
 
-        String httpUrlValue = urlValue;
+        alertDialogBuilder.setView(layout);
 
-        if (!(httpUrlValue.startsWith("http://")) || (httpUrlValue.startsWith("https://"))) {
-            if (httpUrlValue.startsWith("www.")) {
-                httpUrlValue = "http://" + urlValue;
+        alertDialogBuilder.setPositiveButton("OK", (dialog, whichButton) -> {
+            boolean success = true;
+            String snackbarMessage = "Link Added Successfully";
+            String urlValue = editLinkValue.getText().toString();
+            String httpUrlValue = urlValue;
+
+            // Successfully added only if user inputted a valid URL, and does not have the same
+            // name or value for the link (X.com is equivalent to http://X.com, http://www.X.com,
+            // https://X.com, https://www.X.com, and www.X.com)
+            if (Patterns.WEB_URL.matcher(urlValue).matches()) {
+
+                if (!(httpUrlValue.startsWith("http://")) && !(httpUrlValue.startsWith("https://"))) {
+                    httpUrlValue = generateHTTPURLValue(httpUrlValue, urlValue);
+                }
+
+                if (linkNames.contains(editLinkName.getText().toString())) {
+                    success = false;
+                    snackbarMessage = "Link Name Already Exists";
+                }
+                else {
+                    String strippedHTTPURL = stripHTTPURL(httpUrlValue);
+
+                    for (String linkVal : linkValues) {
+                        String strippedLinkVal= stripHTTPURL(linkVal);
+                        if (strippedLinkVal.contains(strippedHTTPURL) || strippedHTTPURL.contains(strippedLinkVal)) {
+                            success = false;
+                            snackbarMessage = "Link Value Already Exists";
+                            break;
+                        }
+                    }
+                }
             }
             else {
-                httpUrlValue = "http://www." + urlValue;
+                success = false;
             }
 
-        }
+            if (success) {
+                linkNames.add(editLinkName.getText().toString());
+                linkValues.add(httpUrlValue);
+                addItem(editLinkName.getText().toString(), urlValue, httpUrlValue);
+            }
+            Snackbar snackbar = Snackbar.make(view, snackbarMessage, BaseTransientBottomBar.LENGTH_LONG);
+            snackbar.show();
 
-        addItem(editLinkName.getText().toString(),  urlValue,  httpUrlValue);
+        });
 
-        Snackbar sb = Snackbar.make(view, "Link Created Successfully", BaseTransientBottomBar.LENGTH_LONG);
+        alertDialogBuilder.setNegativeButton("Cancel", (dialog, whichButton) -> {
+        });
 
-        sb.show();
+        AlertDialog alertDialog = alertDialogBuilder.create();
 
-        editLinkName.getText().clear();
-        editLinkValue.getText().clear();
-
-        editLinkName.setHint("Enter Link Name");
-        editLinkValue.setHint("Enter Link Value");
-
-        editLinkName.setEnabled(false);
-        editLinkValue.setEnabled(false);
-
-
-
-
+        alertDialog.show();
     }
 
+    String generateHTTPURLValue(String httpUrlValue, String urlValue) {
+            if (httpUrlValue.startsWith("www.")) {
+                return "http://" + urlValue;
+            } else {
+                return "http://www." + urlValue;
+            }
+    }
 
-
+    String stripHTTPURL(String urlToStrip) {
+        if (urlToStrip.startsWith("http://")) {
+            return urlToStrip.replaceFirst("^http://", "");
+        }
+        else {
+            return urlToStrip.replaceFirst("^https://", "");
+        }
+    }
 
     }
