@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -44,6 +45,11 @@ public class LinkCollectorActivity extends AppCompatActivity {
             }
         });
         itemTouchHelper.attachToRecyclerView(recyclerView);
+
+        EditText editLinkName = (EditText) findViewById(R.id.editTextLinkName);
+        EditText editLinkValue = (EditText) findViewById(R.id.editTextLinkValue);
+        editLinkName.setEnabled(false);
+        editLinkValue.setEnabled(false);
     }
 
     @Override
@@ -109,12 +115,23 @@ public class LinkCollectorActivity extends AppCompatActivity {
         generateRecyclerView();
     }
 
-    private void addItem() {
-        collectedLinks.add(0, new ListItem("No Logo item", "Item id: " ));
+    private void addItem(String linkName, String linkValue) {
+        collectedLinks.add(0, new ListItem(linkName, linkValue ));
         recyclerViewAdapter.notifyItemInserted(0);
     }
 
     public void floatingActionButtonOnClick(View view) {
-        addItem();
+        EditText editLinkName = (EditText) findViewById(R.id.editTextLinkName);
+        EditText editLinkValue = (EditText) findViewById(R.id.editTextLinkValue);
+        editLinkName.setEnabled(true);
+        editLinkValue.setEnabled(true);
+    }
+
+    public void finishedButtonOnClick(View view) {
+        EditText editLinkName = (EditText) findViewById(R.id.editTextLinkName);
+        EditText editLinkValue = (EditText) findViewById(R.id.editTextLinkValue);
+        editLinkName.setEnabled(false);
+        editLinkValue.setEnabled(false);
+        addItem(editLinkName.getText().toString(), editLinkValue.getText().toString());
     }
 }

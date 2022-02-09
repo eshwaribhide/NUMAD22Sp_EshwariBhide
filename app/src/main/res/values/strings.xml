@@ -21,4 +21,5 @@
     <string name="linkValue" />
     <string name="enter_link_name">Enter Link Name</string>
     <string name="enter_link_value">Enter Link Value</string>
+    <string name="finished">Finished</string>
 </resources>
