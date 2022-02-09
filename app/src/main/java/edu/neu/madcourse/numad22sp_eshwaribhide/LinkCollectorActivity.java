@@ -6,6 +6,9 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
@@ -19,6 +22,34 @@ public class LinkCollectorActivity extends AppCompatActivity {
 
     private RecyclerView recyclerView;
     private RecyclerViewAdapter recyclerViewAdapter;
+
+    public static class ListItem implements ListItemClickListener {
+        private final Context context;
+
+        private final String linkName;
+        private final String linkValue;
+
+        public ListItem(Context context, String linkName, String linkValue) {
+            this.context = context;
+            this.linkName = linkName;
+            this.linkValue = linkValue;
+        }
+
+        public void listItemOnClick(int position) {
+            Intent i = new Intent(Intent.ACTION_VIEW);
+            i.setData(Uri.parse(linkValue));
+            context.startActivity(i);
+        }
+
+
+        public String getlinkName() {
+            return linkName;
+        }
+
+        public String getlinkValue() {
+            return linkValue;
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,7 +117,7 @@ public class LinkCollectorActivity extends AppCompatActivity {
                     String linkName = savedInstanceState.getString("LinkNameKey" + key);
                     String linkValue = savedInstanceState.getString("LinkNameKey" + key);
 
-                    ListItem listItem = new ListItem(linkName, linkValue);
+                    ListItem listItem = new ListItem(this, linkName, linkValue);
 
                     collectedLinks.add(listItem);
                 }
@@ -117,7 +148,7 @@ public class LinkCollectorActivity extends AppCompatActivity {
     }
 
     private void addItem(String linkName, String linkValue) {
-        collectedLinks.add(0, new ListItem(linkName, linkValue ));
+        collectedLinks.add(0, new ListItem(this, linkName, linkValue));
         recyclerViewAdapter.notifyItemInserted(0);
     }
 
@@ -139,17 +170,25 @@ public class LinkCollectorActivity extends AppCompatActivity {
             addItem(editLinkName.getText().toString(), urlValue);
         }
         catch (Exception e) {
-            Toast toast = Toast.makeText(this, "hi", Toast.LENGTH_LONG);
-            toast.show();
+
         }
 
-        editLinkName.setEnabled(false);
-        editLinkValue.setEnabled(false);
+        editLinkName.getText().clear();
+        editLinkValue.getText().clear();
 
         editLinkName.setHint("Enter Link Name");
         editLinkValue.setHint("Enter Link Value");
 
+        editLinkName.setEnabled(false);
+        editLinkValue.setEnabled(false);
+
+//        Intent i = new Intent(Intent.ACTION_VIEW);
+//        i.setData(Uri.parse("http://google.com"));
+//        LinkCollectorActivity.this.startActivity(i);
+
     }
 
 
-}
+
+
+    }

@@ -11,10 +11,10 @@ import java.util.ArrayList;
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.RecyclerViewHolder> {
 
-    private final ArrayList<ListItem> collectedLinks;
+    private final ArrayList<LinkCollectorActivity.ListItem> collectedLinks;
     private ListItemClickListener listener;
 
-    public RecyclerViewAdapter(ArrayList<ListItem> collectedLinks) {
+    public RecyclerViewAdapter(ArrayList<LinkCollectorActivity.ListItem> collectedLinks) {
         this.collectedLinks = collectedLinks;
     }
 
