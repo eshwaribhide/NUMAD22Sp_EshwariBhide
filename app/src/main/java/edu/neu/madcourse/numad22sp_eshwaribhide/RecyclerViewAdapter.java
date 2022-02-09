@@ -46,11 +46,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     @Override
     public void onBindViewHolder(RecyclerViewHolder holder, int position) {
-//        ListItem currentListItem = collectedLinks.get(position);
-//
-//        holder.linkName.setText(currentListItem.getlinkName());
-//        holder.linkValue.setText(currentListItem.getlinkValue());
-
         holder.linkName.setText(collectedLinks.get(position).getlinkName());
         holder.linkValue.setText(collectedLinks.get(position).getlinkValue());
     }
