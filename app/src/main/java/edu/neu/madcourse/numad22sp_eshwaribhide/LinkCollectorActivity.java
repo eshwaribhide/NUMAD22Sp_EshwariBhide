@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Patterns;
@@ -166,6 +167,7 @@ public class LinkCollectorActivity extends AppCompatActivity {
     public void floatingActionButtonOnClick(View view) {
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
         alertDialogBuilder.setTitle("Enter Link Name and Link Value");
+
         LinearLayout layout = new LinearLayout(this);
         layout.setOrientation(LinearLayout.VERTICAL);
 
@@ -176,6 +178,9 @@ public class LinkCollectorActivity extends AppCompatActivity {
         final EditText editLinkValue = new EditText(this);
         editLinkValue.setHint("Enter Link Value");
         layout.addView(editLinkValue);
+
+        editLinkName.setTextColor(Color.parseColor("#9C27B0"));
+        editLinkValue.setTextColor(Color.parseColor("#9C27B0"));
 
         alertDialogBuilder.setView(layout);
 
