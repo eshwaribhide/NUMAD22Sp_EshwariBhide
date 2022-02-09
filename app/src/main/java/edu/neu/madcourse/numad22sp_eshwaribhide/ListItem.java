@@ -1,7 +1,7 @@
 package edu.neu.madcourse.numad22sp_eshwaribhide;
 
 
-public class ListItem {
+public class ListItem implements ListItemClickListener{
     private final String linkName;
     private final String linkValue;
 

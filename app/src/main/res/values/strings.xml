@@ -17,4 +17,6 @@
     <string name="pressedF">Pressed: F</string>
     <string name="list_item_name" />
     <string name="list_item_value" />
+    <string name="linkName" />
+    <string name="linkValue" />
 </resources>
