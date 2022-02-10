@@ -22,8 +22,6 @@ import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicReference;
 
 public class LinkCollectorActivity extends AppCompatActivity {
     private ArrayList<ListItem> collectedLinks = new ArrayList<>();
