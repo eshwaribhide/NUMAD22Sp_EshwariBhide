@@ -156,7 +156,7 @@ public class LinkCollectorActivity extends AppCompatActivity {
         generateRecyclerView();
     }
 
-    private void addItem(String linkName, String linkValue, String httpUrlValue) {
+    private void addLinkToRecyclerView(String linkName, String linkValue, String httpUrlValue) {
         collectedLinks.add(0, new ListItem(this, linkName, linkValue, httpUrlValue));
         recyclerViewAdapter.notifyItemInserted(0);
     }
@@ -239,7 +239,7 @@ public class LinkCollectorActivity extends AppCompatActivity {
 
             if (success) {
                 snackbarMessage = new StringBuilder("Link Added Successfully");
-                addItem(editLinkName.getText().toString(), urlValue, httpUrlValue);
+                addLinkToRecyclerView(editLinkName.getText().toString(), urlValue, httpUrlValue);
             }
 
             recyclerViewLayoutManager.smoothScrollToPosition(recyclerView, null, 0);
