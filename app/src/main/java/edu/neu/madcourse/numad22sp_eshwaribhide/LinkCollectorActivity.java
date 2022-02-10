@@ -193,9 +193,9 @@ public class LinkCollectorActivity extends AppCompatActivity {
             // https://X.com, https://www.X.com, and www.X.com).
 
             if (Patterns.WEB_URL.matcher(urlValue).matches()) {
-                if (!(httpUrlValue.startsWith("http://")) && !(httpUrlValue.startsWith("https://"))) {
+                if (!(httpUrlValue.startsWith("http://www.")) && !(httpUrlValue.startsWith("https://www."))) {
                     // Needs to be done in order to be valid url for launching in browser
-                    httpUrlValue = generateHTTPURLValue(httpUrlValue, urlValue);
+                    httpUrlValue = generateHTTPURLValue(httpUrlValue);
                 }
 
                 if (editLinkName.getText().toString().equals("")) {
@@ -216,7 +216,7 @@ public class LinkCollectorActivity extends AppCompatActivity {
                             doBreak = true;
                         }
 
-                        if (strippedcollectedLinkHTTPValue.contains(strippedHTTPURL) || strippedHTTPURL.contains(strippedcollectedLinkHTTPValue)) {
+                        if (strippedcollectedLinkHTTPValue.equals(strippedHTTPURL)) {
                             success = false;
                             snackbarMessage.append("'").append(urlValue).append("'").append(" = existing link ").append("'").append(collectedLink.getlinkValue()).append("'");
                             break;
@@ -256,19 +256,25 @@ public class LinkCollectorActivity extends AppCompatActivity {
         alertDialog.show();
     }
 
-    String generateHTTPURLValue(String httpUrlValue, String urlValue) {
+    String generateHTTPURLValue(String httpUrlValue) {
         if (httpUrlValue.startsWith("www.")) {
-            return "http://" + urlValue;
-        } else {
-            return "http://www." + urlValue;
+            return "http://" + httpUrlValue;
+        } else if (httpUrlValue.startsWith("http://")) {
+            return httpUrlValue.replaceFirst("^http://", "http://www.");
+        }
+        else if (httpUrlValue.startsWith("https://")) {
+            return httpUrlValue.replaceFirst("^http://", "https://www.");
+        }
+        else {
+            return "http://www." + httpUrlValue;
         }
     }
 
     String stripHTTPURL(String urlToStrip) {
         if (urlToStrip.startsWith("http://")) {
-            return urlToStrip.replaceFirst("^http://", "");
+            return urlToStrip.replaceFirst("^http://www.", "");
         } else {
-            return urlToStrip.replaceFirst("^https://", "");
+            return urlToStrip.replaceFirst("^https://www.", "");
         }
     }
 
