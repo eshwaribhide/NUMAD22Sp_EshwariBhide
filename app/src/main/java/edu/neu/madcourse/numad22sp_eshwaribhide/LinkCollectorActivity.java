@@ -168,6 +168,7 @@ public class LinkCollectorActivity extends AppCompatActivity {
         LinearLayout layout = new LinearLayout(this);
         layout.setOrientation(LinearLayout.VERTICAL);
 
+
         final EditText editLinkName = new EditText(this);
         editLinkName.setHint("Enter Link Name");
         layout.addView(editLinkName);
@@ -196,27 +197,34 @@ public class LinkCollectorActivity extends AppCompatActivity {
                     // Needs to be done in order to be valid url for launching in browser
                     httpUrlValue = generateHTTPURLValue(httpUrlValue, urlValue);
                 }
-                String strippedHTTPURL = stripHTTPURL(httpUrlValue);
-                boolean doBreak = false;
-                for (ListItem collectedLink : collectedLinks) {
-                    String collectedLinkName = collectedLink.getlinkName();
-                    String strippedcollectedLinkHTTPValue = stripHTTPURL(collectedLink.getLinkHttpValue());
 
-                    if (collectedLinkName.equals(editLinkName.getText().toString())) {
-                        success = false;
-                        snackbarMessage.append("Link Name Already Exists & ");
-                        // Cannot break here because also want to check if the inputted link value is duplicated
-                        doBreak = true;
-                    }
+                if (editLinkName.getText().toString().equals("")) {
+                    success = false;
+                    snackbarMessage.append("Empty Link Name");
+                }
+                else {
+                    String strippedHTTPURL = stripHTTPURL(httpUrlValue);
+                    boolean doBreak = false;
+                    for (ListItem collectedLink : collectedLinks) {
+                        String collectedLinkName = collectedLink.getlinkName();
+                        String strippedcollectedLinkHTTPValue = stripHTTPURL(collectedLink.getLinkHttpValue());
 
-                    if (strippedcollectedLinkHTTPValue.contains(strippedHTTPURL) || strippedHTTPURL.contains(strippedcollectedLinkHTTPValue)) {
-                        success = false;
-                        snackbarMessage.append("'").append(urlValue).append("'").append(" = existing link ").append("'").append(collectedLink.getlinkValue()).append("'");
-                        break;
-                    }
+                        if (collectedLinkName.equals(editLinkName.getText().toString())) {
+                            success = false;
+                            snackbarMessage.append("Link Name Already Exists & ");
+                            // Cannot break here because also want to check if the inputted link value is duplicated
+                            doBreak = true;
+                        }
 
-                    if (doBreak) {
-                        break;
+                        if (strippedcollectedLinkHTTPValue.contains(strippedHTTPURL) || strippedHTTPURL.contains(strippedcollectedLinkHTTPValue)) {
+                            success = false;
+                            snackbarMessage.append("'").append(urlValue).append("'").append(" = existing link ").append("'").append(collectedLink.getlinkValue()).append("'");
+                            break;
+                        }
+
+                        if (doBreak) {
+                            break;
+                        }
                     }
                 }
             } else {
