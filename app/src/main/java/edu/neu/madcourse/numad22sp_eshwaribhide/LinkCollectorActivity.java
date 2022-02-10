@@ -25,8 +25,6 @@ import java.util.ArrayList;
 
 public class LinkCollectorActivity extends AppCompatActivity {
     private ArrayList<ListItem> collectedLinks = new ArrayList<>();
-    private ArrayList<String> linkNames = new ArrayList<>();
-    private ArrayList<String> linkValues = new ArrayList<>();
 
     private RecyclerView recyclerView;
     private RecyclerViewAdapter recyclerViewAdapter;
@@ -184,53 +182,57 @@ public class LinkCollectorActivity extends AppCompatActivity {
 
         alertDialogBuilder.setPositiveButton("OK", (dialog, whichButton) -> {
             boolean success = true;
-            String snackbarMessage = "Cannot Add Link: ";
+            StringBuilder snackbarMessage = new StringBuilder("Cannot Add Link: ");
             String urlValue = editLinkValue.getText().toString();
             String httpUrlValue = urlValue;
 
             // Successfully added only if user inputted a valid URL, and does not have the same
             // name or value for the link (X.com is equivalent to http://X.com, http://www.X.com,
-            // https://X.com, https://www.X.com, and www.X.com). Error messages are concatenated
-            // for each individual error.
-
-            if (linkNames.contains(editLinkName.getText().toString())) {
-                success = false;
-                snackbarMessage += "Link Name Already Exists | ";
-            }
+            // https://X.com, https://www.X.com, and www.X.com).
 
             if (Patterns.WEB_URL.matcher(urlValue).matches()) {
-
                 if (!(httpUrlValue.startsWith("http://")) && !(httpUrlValue.startsWith("https://"))) {
                     httpUrlValue = generateHTTPURLValue(httpUrlValue, urlValue);
                 }
-
                 String strippedHTTPURL = stripHTTPURL(httpUrlValue);
+                boolean doBreak = false;
+                for (ListItem collectedLink : collectedLinks) {
+                    String collectedLinkName = collectedLink.getlinkName();
+                    String strippedcollectedLinkHTTPValue = stripHTTPURL(collectedLink.getLinkHttpValue());
 
-                for (String linkVal : linkValues) {
-                    String strippedLinkVal= stripHTTPURL(linkVal);
-                    if (strippedLinkVal.contains(strippedHTTPURL) || strippedHTTPURL.contains(strippedLinkVal)) {
+                    if (collectedLinkName.equals(editLinkName.getText().toString())) {
                         success = false;
-                        snackbarMessage += "Link Value Already Exists";
+                        snackbarMessage.append("Link Name Already Exists | ");
+                        // Cannot break here because also want to check if the inputted link value is duplicated
+                        doBreak = true;
+                    }
+
+                    if (strippedcollectedLinkHTTPValue.contains(strippedHTTPURL) || strippedHTTPURL.contains(strippedcollectedLinkHTTPValue)) {
+                        success = false;
+                        snackbarMessage.append("URL Already Exists");
+                        break;
+                    }
+
+                    if (doBreak) {
                         break;
                     }
                 }
             }
+
             else {
                 success = false;
-                snackbarMessage += "Input is not a validly formatted URL";
+                snackbarMessage.append("Invalid URL Format (should use X.com, www.X.com, http://X.com, etc.)");
             }
 
-            if (snackbarMessage.endsWith("| ")) {
-                snackbarMessage = snackbarMessage.substring(0, snackbarMessage.length() - 2);
+            if (snackbarMessage.toString().endsWith("| ")) {
+                snackbarMessage = new StringBuilder(snackbarMessage.substring(0, snackbarMessage.length() - 2));
             }
 
             if (success) {
-                snackbarMessage = "Link Added Successfully";
-                linkNames.add(editLinkName.getText().toString());
-                linkValues.add(httpUrlValue);
+                snackbarMessage = new StringBuilder("Link Added Successfully");
                 addItem(editLinkName.getText().toString(), urlValue, httpUrlValue);
             }
-            Snackbar snackbar = Snackbar.make(view, snackbarMessage, BaseTransientBottomBar.LENGTH_LONG);
+            Snackbar snackbar = Snackbar.make(view, snackbarMessage.toString(), BaseTransientBottomBar.LENGTH_LONG);
             snackbar.show();
 
         });
