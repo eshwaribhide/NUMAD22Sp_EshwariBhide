@@ -202,14 +202,14 @@ public class LinkCollectorActivity extends AppCompatActivity {
 
                     if (collectedLinkName.equals(editLinkName.getText().toString())) {
                         success = false;
-                        snackbarMessage.append("Link Name Already Exists | ");
+                        snackbarMessage.append("Link Name Already Exists & ");
                         // Cannot break here because also want to check if the inputted link value is duplicated
                         doBreak = true;
                     }
 
                     if (strippedcollectedLinkHTTPValue.contains(strippedHTTPURL) || strippedHTTPURL.contains(strippedcollectedLinkHTTPValue)) {
                         success = false;
-                        snackbarMessage.append("URL Already Exists");
+                        snackbarMessage.append("'").append(urlValue).append("'").append(" = existing link ").append("'").append(collectedLink.getlinkValue()).append("'");
                         break;
                     }
 
@@ -224,7 +224,7 @@ public class LinkCollectorActivity extends AppCompatActivity {
                 snackbarMessage.append("Invalid URL Format (should use X.com, www.X.com, http://X.com, etc.)");
             }
 
-            if (snackbarMessage.toString().endsWith("| ")) {
+            if (snackbarMessage.toString().endsWith("& ")) {
                 snackbarMessage = new StringBuilder(snackbarMessage.substring(0, snackbarMessage.length() - 2));
             }
 
