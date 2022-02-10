@@ -28,6 +28,7 @@ public class LinkCollectorActivity extends AppCompatActivity {
 
     private RecyclerView recyclerView;
     private RecyclerViewAdapter recyclerViewAdapter;
+    private RecyclerView.LayoutManager recyclerViewLayoutManager;
 
     public static class ListItem implements ListItemClickListener {
         private final Context context;
@@ -48,7 +49,6 @@ public class LinkCollectorActivity extends AppCompatActivity {
             i.setData(Uri.parse(httpUrlValue));
             context.startActivity(i);
         }
-
 
         public String getlinkName() {
             return linkName;
@@ -135,6 +135,7 @@ public class LinkCollectorActivity extends AppCompatActivity {
     }
 
     private void generateRecyclerView() {
+        recyclerViewLayoutManager = new LinearLayoutManager(this);
         recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setHasFixedSize(true);
 
@@ -146,7 +147,7 @@ public class LinkCollectorActivity extends AppCompatActivity {
         recyclerViewAdapter.setOnItemClickListener(itemClickListener);
 
         recyclerView.setAdapter(recyclerViewAdapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setLayoutManager(recyclerViewLayoutManager);
 
     }
 
@@ -192,6 +193,7 @@ public class LinkCollectorActivity extends AppCompatActivity {
 
             if (Patterns.WEB_URL.matcher(urlValue).matches()) {
                 if (!(httpUrlValue.startsWith("http://")) && !(httpUrlValue.startsWith("https://"))) {
+                    // Needs to be done in order to be valid url for launching in browser
                     httpUrlValue = generateHTTPURLValue(httpUrlValue, urlValue);
                 }
                 String strippedHTTPURL = stripHTTPURL(httpUrlValue);
@@ -217,13 +219,12 @@ public class LinkCollectorActivity extends AppCompatActivity {
                         break;
                     }
                 }
-            }
-
-            else {
+            } else {
                 success = false;
                 snackbarMessage.append("Invalid URL Format (should use X.com, www.X.com, http://X.com, etc.)");
             }
 
+            // Comes from message about link name already existing, but not going into block where link value is duplicated
             if (snackbarMessage.toString().endsWith("& ")) {
                 snackbarMessage = new StringBuilder(snackbarMessage.substring(0, snackbarMessage.length() - 2));
             }
@@ -232,6 +233,8 @@ public class LinkCollectorActivity extends AppCompatActivity {
                 snackbarMessage = new StringBuilder("Link Added Successfully");
                 addItem(editLinkName.getText().toString(), urlValue, httpUrlValue);
             }
+
+            recyclerViewLayoutManager.smoothScrollToPosition(recyclerView, null, 0);
             Snackbar snackbar = Snackbar.make(view, snackbarMessage.toString(), BaseTransientBottomBar.LENGTH_LONG);
             snackbar.show();
 
@@ -246,20 +249,19 @@ public class LinkCollectorActivity extends AppCompatActivity {
     }
 
     String generateHTTPURLValue(String httpUrlValue, String urlValue) {
-            if (httpUrlValue.startsWith("www.")) {
-                return "http://" + urlValue;
-            } else {
-                return "http://www." + urlValue;
-            }
+        if (httpUrlValue.startsWith("www.")) {
+            return "http://" + urlValue;
+        } else {
+            return "http://www." + urlValue;
+        }
     }
 
     String stripHTTPURL(String urlToStrip) {
         if (urlToStrip.startsWith("http://")) {
             return urlToStrip.replaceFirst("^http://", "");
-        }
-        else {
+        } else {
             return urlToStrip.replaceFirst("^https://", "");
         }
     }
 
-    }
+}
