@@ -263,7 +263,7 @@ public class LinkCollectorActivity extends AppCompatActivity {
             return httpUrlValue.replaceFirst("^http://", "http://www.");
         }
         else if (httpUrlValue.startsWith("https://")) {
-            return httpUrlValue.replaceFirst("^http://", "https://www.");
+            return httpUrlValue.replaceFirst("^https://", "https://www.");
         }
         else {
             return "http://www." + httpUrlValue;
