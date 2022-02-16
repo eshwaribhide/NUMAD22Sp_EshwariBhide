@@ -3,6 +3,7 @@ package edu.neu.madcourse.numad22sp_eshwaribhide;
 import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -72,8 +73,10 @@ public class LocatorActivity extends AppCompatActivity implements LocationListen
     public void setLatLongText(Location location) {
         latitudeValue.setText("Latitude: " + location.getLatitude());
         latitudeValue.setTextSize(20);
+        latitudeValue.setTextColor(Color.parseColor("#9C27B0"));
         longitudeValue.setText("Longitude: " + location.getLongitude());
         longitudeValue.setTextSize(20);
+        longitudeValue.setTextColor(Color.parseColor("#9C27B0"));
     }
 
     @Override
