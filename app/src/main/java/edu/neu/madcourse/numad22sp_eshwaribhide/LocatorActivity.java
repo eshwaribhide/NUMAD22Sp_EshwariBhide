@@ -29,30 +29,27 @@ public class LocatorActivity extends AppCompatActivity implements LocationListen
         ActivityCompat.requestPermissions(this,
                 new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_CODE_LOCATION);
         locationValue = findViewById(R.id.locationValue);
-        getLocationPermissions();
+        showLocation();
     }
-
-
-    public void getLocationPermissions() {
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            showLocation();
-        } else {
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION)) {
-                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
-                alertDialogBuilder.setTitle("Location Permissions");
-                alertDialogBuilder.setMessage("Must Obtain Permissions for Location");
-                alertDialogBuilder.setPositiveButton("OK", (dialog, whichButton) -> {
-                    ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_CODE_LOCATION);
-                });
-                AlertDialog alertDialog = alertDialogBuilder.create();
-                alertDialog.show();
-            } else {
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_CODE_LOCATION);
-            }
-
-        }
-    }
-
+//
+//    public void getLocationPermissions() {
+//        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+//            showLocation();
+//        } else {
+//            if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION)) {
+//                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+//                alertDialogBuilder.setTitle("Location Permissions");
+//                alertDialogBuilder.setMessage("Must Obtain Permissions for Location");
+//                alertDialogBuilder.setPositiveButton("OK", (dialog, whichButton) ->
+//                        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_CODE_LOCATION));
+//                AlertDialog alertDialog = alertDialogBuilder.create();
+//                alertDialog.show();
+//            } else {
+//                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_CODE_LOCATION);
+//            }
+//
+//        }
+//    }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -66,7 +63,6 @@ public class LocatorActivity extends AppCompatActivity implements LocationListen
             }
         }
     }
-
 
     public void showLocation() {
         if (ActivityCompat.checkSelfPermission(
@@ -92,7 +88,3 @@ public class LocatorActivity extends AppCompatActivity implements LocationListen
         locationValue.setText("(Lat,Long): (" + latitude + "," + longitude + ")");
     }
 }
-
-
-
-
