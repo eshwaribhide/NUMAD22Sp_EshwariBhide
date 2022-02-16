@@ -14,6 +14,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
     }
 
+
     /** Method is called when the user taps the Locator button */
     public void locatorOnClick(View view) {
         Intent intent = new Intent(this, LocatorActivity.class);
