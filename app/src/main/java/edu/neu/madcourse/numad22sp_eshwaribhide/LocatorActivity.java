@@ -1,7 +1,6 @@
 package edu.neu.madcourse.numad22sp_eshwaribhide;
 
 import android.Manifest;
-import android.app.AlertDialog;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -18,7 +17,8 @@ import androidx.core.content.ContextCompat;
 
 public class LocatorActivity extends AppCompatActivity implements LocationListener {
     private static final int REQUEST_CODE_LOCATION = 1;
-    TextView locationValue;
+    TextView latitudeValue;
+    TextView longitudeValue;
     LocationManager locationManager;
 
     @Override
@@ -26,55 +26,19 @@ public class LocatorActivity extends AppCompatActivity implements LocationListen
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_locator);
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        ActivityCompat.requestPermissions(this,
-                new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_CODE_LOCATION);
-        locationValue = findViewById(R.id.locationValue);
-        showLocation();
-    }
-//
-//    public void getLocationPermissions() {
-//        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-//            showLocation();
-//        } else {
-//            if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION)) {
-//                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
-//                alertDialogBuilder.setTitle("Location Permissions");
-//                alertDialogBuilder.setMessage("Must Obtain Permissions for Location");
-//                alertDialogBuilder.setPositiveButton("OK", (dialog, whichButton) ->
-//                        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_CODE_LOCATION));
-//                AlertDialog alertDialog = alertDialogBuilder.create();
-//                alertDialog.show();
-//            } else {
-//                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_CODE_LOCATION);
-//            }
-//
-//        }
-//    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        switch (requestCode) {
-            case REQUEST_CODE_LOCATION: {
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                        showLocation();
-                    }
-                }
-            }
-        }
+        latitudeValue = findViewById(R.id.latitudeValue);
+        longitudeValue = findViewById(R.id.longitudeValue);
+        showLocationValues();
     }
 
-    public void showLocation() {
+    public void showLocationValues() {
         if (ActivityCompat.checkSelfPermission(
-                this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
-                this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_CODE_LOCATION);
         } else {
-            Location lastKnownLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-            if (lastKnownLocation != null) {
-                String latitude = String.valueOf(lastKnownLocation.getLatitude());
-                String longitude = String.valueOf(lastKnownLocation.getLongitude());
-                locationValue.setText("(Lat,Long): (" + latitude + "," + longitude + ")");
+            Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+            if (location != null) {
+                setLatLongText(location);
             } else {
                 Toast.makeText(this, "Cannot find location", Toast.LENGTH_SHORT).show();
             }
@@ -83,8 +47,22 @@ public class LocatorActivity extends AppCompatActivity implements LocationListen
 
     @Override
     public void onLocationChanged(@NonNull Location location) {
-        String latitude = String.valueOf(location.getLatitude());
-        String longitude = String.valueOf(location.getLongitude());
-        locationValue.setText("(Lat,Long): (" + latitude + "," + longitude + ")");
+        setLatLongText(location);
+    }
+
+    public void setLatLongText(Location location) {
+        latitudeValue.setText("Latitude: " + location.getLatitude());
+        latitudeValue.setTextSize(20);
+        longitudeValue.setText("Longitude: " + location.getLongitude());
+        longitudeValue.setTextSize(20);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (requestCode == REQUEST_CODE_LOCATION && grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                showLocationValues();
+            }
+        }
     }
 }
