@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.widget.TextView;
@@ -15,10 +16,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
-public class LocatorActivity extends AppCompatActivity {
+public class LocatorActivity extends AppCompatActivity implements LocationListener {
     private static final int REQUEST_CODE_LOCATION = 1;
-    TextView latitudeValue;
-    TextView longitudeValue;
+    TextView locationValue;
     LocationManager locationManager;
 
     @Override
@@ -28,8 +28,7 @@ public class LocatorActivity extends AppCompatActivity {
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         ActivityCompat.requestPermissions(this,
                 new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_CODE_LOCATION);
-        latitudeValue = findViewById(R.id.latitudeValue);
-        longitudeValue = findViewById(R.id.longitudeValue);
+        locationValue = findViewById(R.id.locationValue);
         getLocationPermissions();
     }
 
@@ -75,16 +74,22 @@ public class LocatorActivity extends AppCompatActivity {
                 this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_CODE_LOCATION);
         } else {
-            Location locationGPS = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-            if (locationGPS != null) {
-                String latitude = String.valueOf(locationGPS.getLatitude());
-                String longitude = String.valueOf(locationGPS.getLongitude());
-                latitudeValue.setText("Latitude: " + latitude);
-                longitudeValue.setText("Longitude: " + longitude);
+            Location lastKnownLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+            if (lastKnownLocation != null) {
+                String latitude = String.valueOf(lastKnownLocation.getLatitude());
+                String longitude = String.valueOf(lastKnownLocation.getLongitude());
+                locationValue.setText("(Lat,Long): (" + latitude + "," + longitude + ")");
             } else {
-                Toast.makeText(this, "Unable to find location.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Cannot find location", Toast.LENGTH_SHORT).show();
             }
         }
+    }
+
+    @Override
+    public void onLocationChanged(@NonNull Location location) {
+        String latitude = String.valueOf(location.getLatitude());
+        String longitude = String.valueOf(location.getLongitude());
+        locationValue.setText("(Lat,Long): (" + latitude + "," + longitude + ")");
     }
 }
 
