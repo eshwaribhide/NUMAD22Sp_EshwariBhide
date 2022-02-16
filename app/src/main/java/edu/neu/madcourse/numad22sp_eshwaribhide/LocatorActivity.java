@@ -25,6 +25,7 @@ public class LocatorActivity extends AppCompatActivity implements LocationListen
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_locator);
+        init(savedInstanceState);
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         latitudeValue = findViewById(R.id.latitudeValue);
         longitudeValue = findViewById(R.id.longitudeValue);
@@ -43,6 +44,24 @@ public class LocatorActivity extends AppCompatActivity implements LocationListen
                 Toast.makeText(this, "Cannot find location", Toast.LENGTH_SHORT).show();
             }
         }
+    }
+
+    private void initData(Bundle savedInstanceState) {
+        if (savedInstanceState != null && savedInstanceState.containsKey("LocValueKey")) {
+            latitudeValue.setText(savedInstanceState.getString("Latitude"));
+            longitudeValue.setText(savedInstanceState.getString("Longitude"));
+        }
+    }
+
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        outState.putString("Latitude", String.valueOf(latitudeValue));
+        outState.putString("Longitude", String.valueOf(longitudeValue));
+        super.onSaveInstanceState(outState);
+    }
+
+    private void init(Bundle savedInstanceState) {
+        initData(savedInstanceState);
     }
 
     @Override
