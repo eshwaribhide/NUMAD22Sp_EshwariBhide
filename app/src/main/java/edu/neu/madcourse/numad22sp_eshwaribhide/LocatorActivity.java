@@ -28,6 +28,7 @@ public class LocatorActivity extends AppCompatActivity implements LocationListen
         setContentView(R.layout.activity_locator);
         init(savedInstanceState);
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+
         latitudeValue = findViewById(R.id.latitudeValue);
         longitudeValue = findViewById(R.id.longitudeValue);
         showLocationValues();
@@ -83,6 +84,8 @@ public class LocatorActivity extends AppCompatActivity implements LocationListen
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         if (requestCode == REQUEST_CODE_LOCATION && grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 120 * 1000, 0, this);
+                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 120 * 1000, 0, this);
                 showLocationValues();
             }
         }
