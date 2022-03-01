@@ -47,50 +47,21 @@ public class ServiceActivity extends AppCompatActivity {
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
+                JSONObject jObject = new JSONObject();
                 try {
-                    URL url = new URL("https://jsonplaceholder.typicode.com/posts/1");
+                    URL url = new URL("https://v2.jokeapi.dev/joke/Any");
                     HttpsURLConnection urlConnection = (HttpsURLConnection) url.openConnection();
+                    HttpURLConnection req = (HttpURLConnection) url.openConnection();
+                    req.setRequestMethod("GET");
+                    req.setDoInput(true);
+                    req.connect();
 
-                    try {
-                        BufferedReader reader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
-                        StringBuilder stringBuilder = new StringBuilder();
+                    Scanner s = new Scanner(req.getInputStream()).useDelimiter("\\A");
+        String resp = s.hasNext() ? s.next() : "";
+                jObject = new JSONObject(resp);
+                String category = jObject.getString("category");
 
-                        String line = null;
-                        while ((line = reader.readLine()) != null) {
-                            stringBuilder.append(line).append("\n");
-                       }
-
-                        String x = stringBuilder.toString();
-                        String msg = "WEBSERVICEASDF" + x;
-                        Log.e(TAG, msg);
-                    }
-                    catch (Exception e) {
-                        Log.e(TAG, "WEBSERVICE");
-
-                        e.printStackTrace();
-                    }
-//                    StringBuilder stringBuilder = new StringBuilder();
-//
-//                    String line = null;
-//                    while ((line = reader.readLine()) != null) {
-//                        stringBuilder.append(line).append("\n");
-//                    }
-
-                    //String x = stringBuilder.toString();
-//                    URL url = new URL("https://jsonplaceholder.typicode.com/posts/1");
-//                    HttpURLConnection req = (HttpURLConnection) url.openConnection();
-//                    req.setRequestMethod("GET");
-//                    req.setDoInput(true);
-//                    req.connect();
-
-                    //Scanner s = new Scanner(req.getInputStream()).useDelimiter("\\A");
-//        String res = s.hasNext() ? s.next() : "";
-//                jObject = new JSONObject(resp);
-//                String category = jObject.getString("category");
-//
-//                Log.i("CATEGORYWEBSERVICEACTIVITY",category);
-//
-//                textHandler.post(() -> serviceValue.setText(category));
+               textHandler.post(() -> serviceValue.setText(category));
 
                 } catch (MalformedURLException e) {
                     Log.e(TAG, "MalformedURLException");
@@ -100,6 +71,8 @@ public class ServiceActivity extends AppCompatActivity {
                     e.printStackTrace();
                 } catch (IOException e) {
                     Log.e(TAG, "IOException");
+                    e.printStackTrace();
+                } catch (JSONException e) {
                     e.printStackTrace();
                 }
             }
