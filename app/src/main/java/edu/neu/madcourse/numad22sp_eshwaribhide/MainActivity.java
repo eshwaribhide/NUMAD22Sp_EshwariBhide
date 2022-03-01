@@ -14,6 +14,11 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
     }
 
+    /** Method is called when the user taps the Service button */
+    public void serviceOnClick(View view) {
+        Intent intent = new Intent(this, ServiceActivity.class);
+        startActivity(intent);
+    }
 
     /** Method is called when the user taps the Locator button */
     public void locatorOnClick(View view) {
