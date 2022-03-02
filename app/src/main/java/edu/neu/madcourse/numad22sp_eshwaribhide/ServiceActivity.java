@@ -23,6 +23,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
+import java.text.BreakIterator;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -39,6 +40,7 @@ public class ServiceActivity extends AppCompatActivity {
     private CheckBox punCheckBox;
     private CheckBox xmasCheckBox;
     private ProgressBar spinner;
+    private boolean jokesFound = false;
 
 
     private ArrayList<ServiceActivity.FoundJoke> foundJokes = new ArrayList<>();
@@ -61,6 +63,7 @@ public class ServiceActivity extends AppCompatActivity {
         public int getImageSource() {
             return imageSource;
         }
+
 
         public String getjokeSetup() {
             return jokeSetup;
@@ -86,6 +89,17 @@ public class ServiceActivity extends AppCompatActivity {
         spinner = (ProgressBar)findViewById(R.id.progressBar1);
         spinner.setVisibility(View.GONE);
 
+        if (jokesFound) {
+            retrieveJokesButton.setVisibility(View.GONE);
+            jokeCategory.setVisibility(View.GONE);
+            jokeNumber.setVisibility(View.GONE);
+            programmingCheckBox.setVisibility(View.GONE);
+            punCheckBox.setVisibility(View.GONE);
+            xmasCheckBox.setVisibility(View.GONE);
+        }
+
+
+
     }
 
     //checkbox save state
@@ -99,6 +113,7 @@ public class ServiceActivity extends AppCompatActivity {
             size = foundJokes.size();
         }
         outState.putInt("LengthFoundJokes", size);
+        outState.putBoolean("JokesFound", jokesFound);
 
         for (int i = 0; i < size; i++) {
             int keyInt = i + 1;
@@ -114,9 +129,11 @@ public class ServiceActivity extends AppCompatActivity {
     private void initData(Bundle savedInstanceState) {
 
         if (savedInstanceState != null && savedInstanceState.containsKey("LengthFoundJokes")) {
-            if (foundJokes == null || foundJokes.size() == 0) {
+            jokesFound = savedInstanceState.getBoolean("JokesFound");
 
+            if (foundJokes == null || foundJokes.size() == 0) {
                 int size = savedInstanceState.getInt("LengthFoundJokes");
+
 
                 for (int i = 0; i < size; i++) {
                     int keyInt = i + 1;
@@ -130,6 +147,8 @@ public class ServiceActivity extends AppCompatActivity {
                     foundJokes.add(foundJoke);
                 }
             }
+
+
         }
 
     }
@@ -198,6 +217,7 @@ public class ServiceActivity extends AppCompatActivity {
 
 
     public void serviceOnClick(View view) {
+        jokesFound = true;
         retrieveJokesButton.setVisibility(View.GONE);
         jokeCategory.setVisibility(View.GONE);
         jokeNumber.setVisibility(View.GONE);
