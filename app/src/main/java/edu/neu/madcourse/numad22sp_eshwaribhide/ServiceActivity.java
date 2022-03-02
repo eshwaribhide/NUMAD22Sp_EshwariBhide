@@ -37,7 +37,7 @@ public class ServiceActivity extends AppCompatActivity {
     private Integer jokeNumberInt;
     private CheckBox programmingCheckBox;
     private CheckBox punCheckBox;
-    private CheckBox scaryCheckBox;
+    private CheckBox xmasCheckBox;
     private ProgressBar spinner;
 
 
@@ -77,13 +77,14 @@ public class ServiceActivity extends AppCompatActivity {
         jokeNumber = findViewById(R.id.jokeNumber);
         programmingCheckBox = findViewById(R.id.programmingCheckBox);
         punCheckBox = findViewById(R.id.punCheckBox);
-        scaryCheckBox = findViewById(R.id.scaryCheckBox);
+        xmasCheckBox = findViewById(R.id.xmasCheckBox);
         spinner = (ProgressBar)findViewById(R.id.progressBar1);
         spinner.setVisibility(View.GONE);
 
     }
 
     //checkbox save state
+    // icons
 
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
@@ -133,7 +134,7 @@ public class ServiceActivity extends AppCompatActivity {
         jokeNumber.setVisibility(View.GONE);
         programmingCheckBox.setVisibility(View.GONE);
         punCheckBox.setVisibility(View.GONE);
-        scaryCheckBox.setVisibility(View.GONE);
+        xmasCheckBox.setVisibility(View.GONE);
         foundJokes.add(0, new ServiceActivity.FoundJoke(jokeSetup, jokeDelivery));
         recyclerViewAdapter.notifyItemInserted(0);
     }
@@ -164,8 +165,8 @@ public class ServiceActivity extends AppCompatActivity {
         if (punCheckBox.isChecked()) {
             category.add("Pun");
         }
-        if (scaryCheckBox.isChecked()) {
-            category.add("Spooky");
+        if (xmasCheckBox.isChecked()) {
+            category.add("Christmas");
         }
         if (category.size() == 0) {
             category.add("Programming");

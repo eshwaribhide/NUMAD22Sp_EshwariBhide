@@ -79,11 +79,11 @@
         app:layout_constraintTop_toBottomOf="@+id/jokeCategory" />
 
     <CheckBox
-        android:id="@+id/scaryCheckBox"
+        android:id="@+id/xmasCheckBox"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="120dp"
-        android:text="Scary Jokes"
+        android:text="XMAS Time "
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.214"
         app:layout_constraintStart_toStartOf="parent"
