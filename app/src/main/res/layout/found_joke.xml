@@ -11,12 +11,25 @@
         android:layout_height="match_parent"
         android:layout_margin="5dp">
 
+        <ImageView
+            android:id="@+id/item_icon"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="5dp"
+            android:layout_marginBottom="5dp"
+            android:adjustViewBounds="false"
+            android:padding="3dp"
+            android:contentDescription="Image to reflect joke category" />
+
         <TextView
             android:id="@+id/jokeSetup"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="7dp"
             android:layout_marginStart="10dp"
+            android:layout_toEndOf="@+id/item_icon"
             android:textColor="@color/purple_500"
             android:textSize="20sp"
             android:textStyle="bold"
@@ -27,6 +40,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/jokeSetup"
+            android:layout_toEndOf="@+id/item_icon"
             android:layout_marginStart="10dp"
             android:layout_marginTop="5dp"
             android:text="@string/linkValue"

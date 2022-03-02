@@ -3,6 +3,7 @@ package edu.neu.madcourse.numad22sp_eshwaribhide;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -20,11 +21,13 @@ public class ServiceRecyclerViewAdapter extends RecyclerView.Adapter<ServiceRecy
     }
 
     public class ServiceRecyclerViewHolder extends RecyclerView.ViewHolder {
+        public ImageView itemIcon;
         public TextView jokeSetup;
         public TextView jokeDelivery;
 
         public ServiceRecyclerViewHolder(View itemView, final ListItemClickListener listener) {
             super(itemView);
+            itemIcon = itemView.findViewById(R.id.item_icon);
             jokeSetup = itemView.findViewById(R.id.jokeSetup);
             jokeDelivery = itemView.findViewById(R.id.jokeDelivery);
 
@@ -40,6 +43,7 @@ public class ServiceRecyclerViewAdapter extends RecyclerView.Adapter<ServiceRecy
 
     @Override
     public void onBindViewHolder(ServiceRecyclerViewHolder holder, int position) {
+        holder.itemIcon.setImageResource(foundJokes.get(position).getImageSource());
         holder.jokeSetup.setText(foundJokes.get(position).getjokeSetup());
         holder.jokeDelivery.setText(foundJokes.get(position).getjokeDelivery());
     }

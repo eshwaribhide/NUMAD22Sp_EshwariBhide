@@ -48,13 +48,18 @@ public class ServiceActivity extends AppCompatActivity {
     private RecyclerView.LayoutManager recyclerViewLayoutManager;
 
     public static class FoundJoke {
-
+        private final int imageSource;
         private final String jokeSetup;
         private final String jokeDelivery;
 
-        public FoundJoke(String jokeSetup, String jokeDelivery) {
+        public FoundJoke(int imageSource, String jokeSetup, String jokeDelivery) {
+            this.imageSource = imageSource;
             this.jokeSetup = jokeSetup;
             this.jokeDelivery = jokeDelivery;
+        }
+
+        public int getImageSource() {
+            return imageSource;
         }
 
         public String getjokeSetup() {
@@ -84,7 +89,7 @@ public class ServiceActivity extends AppCompatActivity {
     }
 
     //checkbox save state
-    // icons
+    // add variety
 
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
@@ -98,6 +103,7 @@ public class ServiceActivity extends AppCompatActivity {
         for (int i = 0; i < size; i++) {
             int keyInt = i + 1;
             String key = Integer.toString(keyInt);
+            outState.putInt("JokeImageKey" + key, foundJokes.get(i).getImageSource());
             outState.putString("JokeSetupKey" + key, foundJokes.get(i).getjokeSetup());
             outState.putString("JokeDeliveryKey" + key, foundJokes.get(i).getjokeDelivery());
         }
@@ -115,10 +121,11 @@ public class ServiceActivity extends AppCompatActivity {
                 for (int i = 0; i < size; i++) {
                     int keyInt = i + 1;
                     String key = Integer.toString(keyInt);
+                    int jokeImgID = savedInstanceState.getInt("JokeImageKey"+ key);
                     String jokeSetup = savedInstanceState.getString("JokeSetupKey" + key);
                     String jokeDelivery = savedInstanceState.getString("JokeDeliveryKey" + key);
 
-                    ServiceActivity.FoundJoke foundJoke = new ServiceActivity.FoundJoke(jokeSetup, jokeDelivery);
+                    ServiceActivity.FoundJoke foundJoke = new ServiceActivity.FoundJoke(jokeImgID, jokeSetup, jokeDelivery);
 
                     foundJokes.add(foundJoke);
                 }
@@ -127,9 +134,9 @@ public class ServiceActivity extends AppCompatActivity {
 
     }
 
-    private void addJokeToRecyclerView(String jokeSetup, String jokeDelivery) {
+    private void addJokeToRecyclerView(Integer imageId, String jokeSetup, String jokeDelivery) {
         recyclerViewLayoutManager.smoothScrollToPosition(recyclerView, null, 0);
-        foundJokes.add(0, new ServiceActivity.FoundJoke(jokeSetup, jokeDelivery));
+        foundJokes.add(0, new ServiceActivity.FoundJoke(imageId, jokeSetup, jokeDelivery));
         recyclerViewAdapter.notifyItemInserted(0);
     }
 
@@ -221,7 +228,17 @@ public class ServiceActivity extends AppCompatActivity {
                     if (jokeNumberInt == 1) {
                         String jokeSetup = jObject.getString("setup");
                         String jokeDelivery = jObject.getString("delivery");
-                        textHandler.post(() -> addJokeToRecyclerView(jokeSetup, jokeDelivery));
+                        String jokeCategory = jObject.getString("category");
+                        if (jokeCategory.equals("Christmas")) {
+                            textHandler.post(() -> addJokeToRecyclerView(R.drawable.presents, jokeSetup, jokeDelivery));
+                        }
+                        else if (jokeCategory.equals("Pun")) {
+                            textHandler.post(() -> addJokeToRecyclerView(R.drawable.facepalm, jokeSetup, jokeDelivery));
+                        }
+                        else {
+                            textHandler.post(() -> addJokeToRecyclerView(R.drawable.programmer, jokeSetup, jokeDelivery));
+                        }
+
                     }
                     else {
                         Log.e(TAG, "Getting Jokes");
@@ -230,7 +247,16 @@ public class ServiceActivity extends AppCompatActivity {
                             JSONObject joke = jArray.getJSONObject(i);
                             String jokeSetup = joke.getString("setup");
                             String jokeDelivery = joke.getString("delivery");
-                            textHandler.post(() -> addJokeToRecyclerView(jokeSetup, jokeDelivery));
+                            String jokeCategory = joke.getString("category");
+                            if (jokeCategory.equals("Christmas")) {
+                                textHandler.post(() -> addJokeToRecyclerView(R.drawable.presents, jokeSetup, jokeDelivery));
+                            }
+                            else if (jokeCategory.equals("Pun")) {
+                                textHandler.post(() -> addJokeToRecyclerView(R.drawable.facepalm, jokeSetup, jokeDelivery));
+                            }
+                            else {
+                                textHandler.post(() -> addJokeToRecyclerView(R.drawable.programmer, jokeSetup, jokeDelivery));
+                            }
                         }
                     }
                     textHandler.post(() ->spinner.setVisibility(View.GONE));
