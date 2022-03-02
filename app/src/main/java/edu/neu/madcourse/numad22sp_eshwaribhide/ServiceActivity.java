@@ -129,12 +129,6 @@ public class ServiceActivity extends AppCompatActivity {
 
     private void addJokeToRecyclerView(String jokeSetup, String jokeDelivery) {
         recyclerViewLayoutManager.smoothScrollToPosition(recyclerView, null, 0);
-        retrieveJokesButton.setVisibility(View.GONE);
-        jokeCategory.setVisibility(View.GONE);
-        jokeNumber.setVisibility(View.GONE);
-        programmingCheckBox.setVisibility(View.GONE);
-        punCheckBox.setVisibility(View.GONE);
-        xmasCheckBox.setVisibility(View.GONE);
         foundJokes.add(0, new ServiceActivity.FoundJoke(jokeSetup, jokeDelivery));
         recyclerViewAdapter.notifyItemInserted(0);
     }
@@ -197,6 +191,12 @@ public class ServiceActivity extends AppCompatActivity {
 
 
     public void serviceOnClick(View view) {
+        retrieveJokesButton.setVisibility(View.GONE);
+        jokeCategory.setVisibility(View.GONE);
+        jokeNumber.setVisibility(View.GONE);
+        programmingCheckBox.setVisibility(View.GONE);
+        punCheckBox.setVisibility(View.GONE);
+        xmasCheckBox.setVisibility(View.GONE);
         spinner.setVisibility(View.VISIBLE);
 
         String urlStr = constructURL();
