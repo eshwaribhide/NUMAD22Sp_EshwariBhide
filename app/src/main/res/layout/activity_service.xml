@@ -26,7 +26,7 @@
         android:text="Press to Retrieve Jokes"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.195"
+        app:layout_constraintHorizontal_bias="0.196"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/jokeNumber"
         app:layout_constraintVertical_bias="0.0" />
@@ -35,7 +35,7 @@
         android:id="@+id/jokeNumber"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="124dp"
+        android:layout_marginTop="116dp"
         android:digits="0123456789"
         android:ems="10"
         android:hint="Enter No. of Jokes (1-10)"
