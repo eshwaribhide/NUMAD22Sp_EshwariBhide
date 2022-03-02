@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -96,6 +97,9 @@ public class ServiceActivity extends AppCompatActivity {
             programmingCheckBox.setVisibility(View.GONE);
             punCheckBox.setVisibility(View.GONE);
             xmasCheckBox.setVisibility(View.GONE);
+        }
+        else {
+            Toast.makeText(this, "API limitations are such that retrieved jokes can sometimes be mostly of one category even if many categories were selected.", Toast.LENGTH_LONG).show();
         }
 
 
