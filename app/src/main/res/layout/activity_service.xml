@@ -15,7 +15,7 @@
         android:text="Press to Retrieve Jokes"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.196"
+        app:layout_constraintHorizontal_bias="0.195"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/jokeNumber"
         app:layout_constraintVertical_bias="0.0" />
