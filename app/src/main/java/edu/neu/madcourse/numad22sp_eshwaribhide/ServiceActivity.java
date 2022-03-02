@@ -9,7 +9,9 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import org.json.JSONArray;
@@ -26,15 +28,18 @@ import java.util.Scanner;
 
 import javax.net.ssl.HttpsURLConnection;
 
-//Background execution not allowed: receiving Intent
 public class ServiceActivity extends AppCompatActivity {
     private static final String TAG = "DebugServiceActivity";
     private Handler textHandler = new Handler();
+    private Button retrieveJokesButton;
+    private TextView jokeCategory;
     private TextView jokeNumber;
     private Integer jokeNumberInt;
     private CheckBox programmingCheckBox;
     private CheckBox punCheckBox;
     private CheckBox scaryCheckBox;
+    private ProgressBar spinner;
+
 
     private ArrayList<ServiceActivity.FoundJoke> foundJokes = new ArrayList<>();
 
@@ -67,10 +72,14 @@ public class ServiceActivity extends AppCompatActivity {
         setContentView(R.layout.activity_service);
         initSavedInstanceState(savedInstanceState);
 
+        retrieveJokesButton = findViewById(R.id.retrieveJokes);
+        jokeCategory = findViewById(R.id.jokeCategory);
         jokeNumber = findViewById(R.id.jokeNumber);
         programmingCheckBox = findViewById(R.id.programmingCheckBox);
         punCheckBox = findViewById(R.id.punCheckBox);
         scaryCheckBox = findViewById(R.id.scaryCheckBox);
+        spinner = (ProgressBar)findViewById(R.id.progressBar1);
+        spinner.setVisibility(View.GONE);
 
     }
 
@@ -119,14 +128,16 @@ public class ServiceActivity extends AppCompatActivity {
 
     private void addJokeToRecyclerView(String jokeSetup, String jokeDelivery) {
         recyclerViewLayoutManager.smoothScrollToPosition(recyclerView, null, 0);
+        retrieveJokesButton.setVisibility(View.GONE);
+        jokeCategory.setVisibility(View.GONE);
         jokeNumber.setVisibility(View.GONE);
         programmingCheckBox.setVisibility(View.GONE);
         punCheckBox.setVisibility(View.GONE);
         scaryCheckBox.setVisibility(View.GONE);
         foundJokes.add(0, new ServiceActivity.FoundJoke(jokeSetup, jokeDelivery));
         recyclerViewAdapter.notifyItemInserted(0);
-
     }
+
     private void generateRecyclerView() {
         recyclerViewLayoutManager = new LinearLayoutManager(this);
         recyclerView = findViewById(R.id.recyclerView);
@@ -185,6 +196,8 @@ public class ServiceActivity extends AppCompatActivity {
 
 
     public void serviceOnClick(View view) {
+        spinner.setVisibility(View.VISIBLE);
+
         String urlStr = constructURL();
 
         Thread thread = new Thread(new Runnable() {
@@ -219,6 +232,7 @@ public class ServiceActivity extends AppCompatActivity {
                             textHandler.post(() -> addJokeToRecyclerView(jokeSetup, jokeDelivery));
                         }
                     }
+                    textHandler.post(() ->spinner.setVisibility(View.GONE));
                 } catch (MalformedURLException e) {
                     Log.e(TAG, "MalformedURLException");
                     e.printStackTrace();
