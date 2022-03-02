@@ -101,13 +101,7 @@ public class ServiceActivity extends AppCompatActivity {
         else {
             Toast.makeText(this, "If you don't enter Num. of jokes it defaults to 1, and no categories checked defaults to all.\nAPI limitations are such that retrieved jokes can sometimes be mostly of one category even if many categories were selected.", Toast.LENGTH_LONG).show();
         }
-
-
-
     }
-
-    //checkbox save state
-    // add variety
 
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
