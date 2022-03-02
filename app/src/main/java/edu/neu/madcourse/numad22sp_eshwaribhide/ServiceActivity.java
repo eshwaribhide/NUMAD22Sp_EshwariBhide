@@ -194,6 +194,8 @@ public class ServiceActivity extends AppCompatActivity {
         }
         if (category.size() == 0) {
             category.add("Programming");
+            category.add("Pun");
+            category.add("Christmas");
         }
 
         for (int i = 0; i < category.size(); i++) {
