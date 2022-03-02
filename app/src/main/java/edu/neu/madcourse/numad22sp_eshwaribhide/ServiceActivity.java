@@ -27,6 +27,9 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import com.google.android.material.snackbar.BaseTransientBottomBar;
+import com.google.android.material.snackbar.Snackbar;
+
 public class ServiceActivity extends AppCompatActivity {
     private static final String TAG = "DebugServiceActivity";
     private Handler textHandler = new Handler();
@@ -96,7 +99,7 @@ public class ServiceActivity extends AppCompatActivity {
             xmasCheckBox.setVisibility(View.GONE);
         }
         else {
-            Toast.makeText(this, "If you don't enter Num. of jokes it defaults to 1, and no categories checked defaults to all.\n\nAPI limitations are such that retrieved jokes can sometimes be mostly of one category even if many categories were selected.", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "API limitations are such that retrieved jokes can sometimes be mostly of one category even if many categories were selected.", Toast.LENGTH_LONG).show();
         }
     }
 
@@ -183,11 +186,6 @@ public class ServiceActivity extends AppCompatActivity {
         if (xmasCheckBox.isChecked()) {
             category.add("Christmas");
         }
-        if (category.size() == 0) {
-            category.add("Programming");
-            category.add("Pun");
-            category.add("Christmas");
-        }
 
         for (int i = 0; i < category.size(); i++) {
             if (i==0) {
@@ -201,92 +199,96 @@ public class ServiceActivity extends AppCompatActivity {
         urlStr.append("?blacklistFlags=nsfw,religious,political,racist,sexist,explicit&type=twopart&amount=");
 
         // Is used later on when appending to recycler view
-        if (jokeNumber.getText().toString().matches("")) {
-            jokeNumberInt = 1;
-        }
-        else {
-            jokeNumberInt = Integer.parseInt(jokeNumber.getText().toString());
-        }
+        jokeNumberInt = Integer.parseInt(jokeNumber.getText().toString());
         urlStr.append(jokeNumber.getText().toString());
         return urlStr.toString();
     }
 
     public void serviceOnClick(View view) {
-        jokesFound = true;
-        // Because now everything has been inputted and we are going to display the
-        // RecylerView with the found jokes
-        retrieveJokesButton.setVisibility(View.GONE);
-        jokeCategory.setVisibility(View.GONE);
-        jokeNumber.setVisibility(View.GONE);
-        programmingCheckBox.setVisibility(View.GONE);
-        punCheckBox.setVisibility(View.GONE);
-        xmasCheckBox.setVisibility(View.GONE);
-        spinner.setVisibility(View.VISIBLE);
+        if (!(programmingCheckBox.isChecked()) && !(punCheckBox.isChecked()) && !(xmasCheckBox.isChecked())) {
+            Snackbar.make(view, "Please Check At Least One category", BaseTransientBottomBar.LENGTH_LONG).show();
 
-        String urlStr = constructURL();
+        }
+        else if (jokeNumber.getText().toString().matches("")) {
+            Snackbar.make(view, "Please Enter Number of Jokes to Retrieve", BaseTransientBottomBar.LENGTH_LONG).show();
+        } else {
+            jokesFound = true;
+            // Because now everything has been inputted and we are going to display the
+            // RecyclerView with the found jokes
+            retrieveJokesButton.setVisibility(View.GONE);
+            jokeCategory.setVisibility(View.GONE);
+            jokeNumber.setVisibility(View.GONE);
+            programmingCheckBox.setVisibility(View.GONE);
+            punCheckBox.setVisibility(View.GONE);
+            xmasCheckBox.setVisibility(View.GONE);
+            spinner.setVisibility(View.VISIBLE);
 
-        Thread thread = new Thread(() -> {
-            JSONObject jObject = new JSONObject();
-            try {
-                URL url = new URL(urlStr);
-                Log.e(TAG, urlStr);
-                HttpURLConnection req = (HttpURLConnection) url.openConnection();
-                req.setRequestMethod("GET");
-                req.setDoInput(true);
-                req.connect();
+            String urlStr = constructURL();
 
-                Scanner s = new Scanner(req.getInputStream()).useDelimiter("\\A");
-                String resp = s.hasNext() ? s.next() : "";
-                jObject = new JSONObject(resp);
+            Thread thread = new Thread(() -> {
+                JSONObject jObject = new JSONObject();
+                try {
+                    URL url = new URL(urlStr);
+                    Log.e(TAG, urlStr);
+                    HttpURLConnection req = (HttpURLConnection) url.openConnection();
+                    req.setRequestMethod("GET");
+                    req.setDoInput(true);
+                    req.connect();
 
-                if (jokeNumberInt == 1) {
-                    String jokeSetup = jObject.getString("setup");
-                    String jokeDelivery = jObject.getString("delivery");
-                    String jokeCategory = jObject.getString("category");
-                    if (jokeCategory.equals("Christmas")) {
-                        textHandler.post(() -> addJokeToRecyclerView(R.drawable.presents, jokeSetup, jokeDelivery));
-                    }
-                    else if (jokeCategory.equals("Pun")) {
-                        textHandler.post(() -> addJokeToRecyclerView(R.drawable.facepalm, jokeSetup, jokeDelivery));
-                    }
-                    else {
-                        textHandler.post(() -> addJokeToRecyclerView(R.drawable.programmer, jokeSetup, jokeDelivery));
-                    }
+                    Scanner s = new Scanner(req.getInputStream()).useDelimiter("\\A");
+                    String resp = s.hasNext() ? s.next() : "";
+                    jObject = new JSONObject(resp);
 
-                }
-                else {
-                    Log.e(TAG, "Getting Jokes");
-                    JSONArray jArray = jObject.getJSONArray("jokes");
-                    for (int i = 0; i < jArray.length(); i++) {
-                        JSONObject joke = jArray.getJSONObject(i);
-                        String jokeSetup = joke.getString("setup");
-                        String jokeDelivery = joke.getString("delivery");
-                        String jokeCategory = joke.getString("category");
+                    if (jokeNumberInt == 1) {
+                        String jokeSetup = jObject.getString("setup");
+                        String jokeDelivery = jObject.getString("delivery");
+                        String jokeCategory = jObject.getString("category");
                         if (jokeCategory.equals("Christmas")) {
                             textHandler.post(() -> addJokeToRecyclerView(R.drawable.presents, jokeSetup, jokeDelivery));
-                        }
-                        else if (jokeCategory.equals("Pun")) {
+                        } else if (jokeCategory.equals("Pun")) {
                             textHandler.post(() -> addJokeToRecyclerView(R.drawable.facepalm, jokeSetup, jokeDelivery));
-                        }
-                        else {
+                        } else {
                             textHandler.post(() -> addJokeToRecyclerView(R.drawable.programmer, jokeSetup, jokeDelivery));
                         }
+
+                    } else {
+                        Log.e(TAG, "Getting Jokes");
+                        JSONArray jArray = jObject.getJSONArray("jokes");
+                        for (int i = 0; i < jArray.length(); i++) {
+                            JSONObject joke = jArray.getJSONObject(i);
+                            String jokeSetup = joke.getString("setup");
+                            String jokeDelivery = joke.getString("delivery");
+                            String jokeCategory = joke.getString("category");
+                            if (jokeCategory.equals("Christmas")) {
+                                textHandler.post(() -> addJokeToRecyclerView(R.drawable.presents, jokeSetup, jokeDelivery));
+                            } else if (jokeCategory.equals("Pun")) {
+                                textHandler.post(() -> addJokeToRecyclerView(R.drawable.facepalm, jokeSetup, jokeDelivery));
+                            } else {
+                                textHandler.post(() -> addJokeToRecyclerView(R.drawable.programmer, jokeSetup, jokeDelivery));
+                            }
+                        }
                     }
+
+                } catch (MalformedURLException e) {
+                    Log.e(TAG, "MalformedURLException");
+                    e.printStackTrace();
+                    Snackbar.make(view, "Failed with MalformedURLException", BaseTransientBottomBar.LENGTH_LONG).show();
+                } catch (ProtocolException e) {
+                    Log.e(TAG, "ProtocolException");
+                    e.printStackTrace();
+                    Snackbar.make(view, "Failed with ProtocolException", BaseTransientBottomBar.LENGTH_LONG).show();
+                } catch (IOException e) {
+                    Log.e(TAG, "IOException");
+                    e.printStackTrace();
+                    Snackbar.make(view, "Failed with IOException", BaseTransientBottomBar.LENGTH_LONG).show();
+                } catch (JSONException e) {
+                    Log.e(TAG, "JSONException");
+                    e.printStackTrace();
+                    Snackbar.make(view, "Failed with JSONException", BaseTransientBottomBar.LENGTH_LONG).show();
                 }
-                textHandler.post(() ->spinner.setVisibility(View.GONE));
-            } catch (MalformedURLException e) {
-                Log.e(TAG, "MalformedURLException");
-                e.printStackTrace();
-            } catch (ProtocolException e) {
-                Log.e(TAG, "ProtocolException");
-                e.printStackTrace();
-            } catch (IOException e) {
-                Log.e(TAG, "IOException");
-                e.printStackTrace();
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        });
-        thread.start();
+                textHandler.post(() -> spinner.setVisibility(View.GONE));
+            });
+            thread.start();
+        }
     }
 }
