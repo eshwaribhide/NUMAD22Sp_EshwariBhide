@@ -30,6 +30,8 @@ import java.util.Scanner;
 import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
 
+/** THE WEB SERVICE I USED IS THE JOKE API: "https://v2.jokeapi.dev/joke/"**/
+
 public class ServiceActivity extends AppCompatActivity {
     private static final String TAG = "DebugServiceActivity";
     private Handler textHandler = new Handler();
